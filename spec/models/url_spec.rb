@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Url, type: :model do
   describe 'validation' do
     let!(:user) { create :user }
-    
+
     context 'when has valid data' do
       let(:valid_object) { build(:url, user:) }
 

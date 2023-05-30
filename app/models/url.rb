@@ -6,8 +6,6 @@ class Url < ApplicationRecord
   MAX_ID = 916_132_831 # shorten url within 5 characters in base62
 
   def self.encode(id)
-    raise ArgumentError, 'ID is too large to be encoded with Base62 using 5 characters' if id > MAX_ID
-
     Base62.encode(id)
   end
 
@@ -17,4 +15,11 @@ class Url < ApplicationRecord
 
   validates_presence_of :original_url
   validates_format_of :original_url, with: URI::DEFAULT_PARSER.make_regexp(%w[http https])
+  validate :check_limitation
+
+  def check_limitation
+    return if Url.last.id < MAX_ID
+
+    errors.add(:base, 'The limit has been reached')
+  end
 end

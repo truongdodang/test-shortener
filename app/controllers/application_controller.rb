@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
     if auth_header && auth_header.split(' ').first == 'Bearer'
       token = auth_header.split(' ').last
     else
-      render json: { errors: 'Authorization token is missing or invalid type' }, status: :unauthorized
+      render json: { error: 'Authorization token is missing or invalid type' }, status: :unauthorized
       return
     end
 
@@ -17,9 +17,9 @@ class ApplicationController < ActionController::API
       payload = JsonWebToken.decode(token)
       @current_user = User.find(payload[:user_id])
     rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError, ActiveRecord::RecordNotFound
-      render json: { errors: 'Invalid authorization token' }, status: :unauthorized
+      render json: { error: 'Invalid authorization token' }, status: :unauthorized
     rescue StandardError => e
-      render json: { errors: e.message }, status: :unauthorized
+      render json: { error: e.message }, status: :unauthorized
     end
   end
 end

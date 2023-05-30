@@ -10,11 +10,10 @@ module Api
 
         if @url.save
           render json: { status: 'SUCCESS',
-                         message: 'Short url was created successfully',
                          original_url: @url.original_url,
                          short_url: base_url + Url.encode(@url.id) }, status: :created
         else
-          render json: @url.errors, status: :unprocessable_entity
+          render json: { status: 'FAILED', errors: @url.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
